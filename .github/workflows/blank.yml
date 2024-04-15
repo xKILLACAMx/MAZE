@@ -1,0 +1,93 @@
+import os
+
+# Define the maze layout using ASCII art
+maze = """
+XXXXXXXXXXXXXXXXXXXXX
+X         X         X
+X XXXXXXX X XXXXXXX X
+X X       X       X X
+X X XXXXX XXXXX X X X
+X X X           X X X
+X X X XXXXXXXXX X X X
+X X X X       X X X X
+X X X X XXXXX X X X X
+X X X X X   X X X X X
+X X X X X X X X X X X
+X X X X X X X X X X X
+X X X X   X X   X X X
+X X X XXXXX XXXXX X X
+X X X       X     X X
+X X XXXXXXX XXXXXXX X
+X X               X X
+X XXXXXXXXXXXXXXXXX X
+X                   X
+XXXXXXXXXXXXXXXXXXXXX
+"""
+
+# Define the starting position
+start_row = 18
+start_col = 0
+
+# Define the ending position
+end_row = 0
+end_col = 17
+
+# Define player symbol
+player_symbol = "P"
+
+# Clear the screen
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Print the maze
+def print_maze():
+    clear_screen()
+    print(maze)
+
+# Move the player within the maze
+def move_player(row, col):
+    maze_lines = maze.strip().split('\n')
+    maze_array = [list(line) for line in maze_lines]
+
+    # Move player to new position
+    maze_array[start_row][start_col] = " "
+    maze_array[row][col] = player_symbol
+
+    # Update maze string
+    maze_str = '\n'.join([''.join(line) for line in maze_array])
+    maze = maze_str
+
+    # Update start position
+    start_row = row
+    start_col = col
+
+# Main function to run the game
+def main():
+    print_maze()
+    while True:
+        direction = input("Enter direction (w/a/s/d): ").lower()
+        new_row, new_col = start_row, start_col
+
+        if direction == 'w' and maze[start_row - 1][start_col] != 'X':
+            new_row -= 1
+        elif direction == 'a' and maze[start_row][start_col - 1] != 'X':
+            new_col -= 1
+        elif direction == 's' and maze[start_row + 1][start_col] != 'X':
+            new_row += 1
+        elif direction == 'd' and maze[start_row][start_col + 1] != 'X':
+            new_col += 1
+        elif direction == 'q':
+            break
+        else:
+            print("Invalid move!")
+            continue
+
+        move_player(new_row, new_col)
+        print_maze()
+
+        if new_row == end_row and new_col == end_col:
+            print("Congratulations! You escaped the maze!")
+            break
+
+if __name__ == "__main__":
+    main()
